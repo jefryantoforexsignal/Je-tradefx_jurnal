@@ -21,8 +21,7 @@ th { background: #161b22; color: #58a6ff; }
 
 <script>
 // GANTI DENGAN LINK CSV GOOGLE SHEET KAMU
-const SHEET_URL = "https://docs.google.com/spreadsheets/d/ID_SHEET_KAMU/export?format=csv";
-
+  const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTU5UVG2QyOsCVwzLF5D39El9O3l6Dq5perIlqRyhzZygfqXK6ojR5_avK4nfriuARtr9rI2xTLCdVK/pub?output=csv";
 fetch(SHEET_URL)
 .then(res => res.text())
 .then(csv => {
