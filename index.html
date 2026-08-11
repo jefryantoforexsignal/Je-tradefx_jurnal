@@ -15,35 +15,40 @@ th { background: #161b22; color: #58a6ff; }
 </style>
 </head>
 <body>
-<h1>📊 JE.TRADEFx TRADING JOURNAL</h1>
+<h2 style="text-align:center;">TRADE FX TRADING JOURNAL</h2>
 <p style="text-align:center;">Data otomatis dari Google Sheet</p>
-<div id="data">Loading data...</div>
+
+<div id="tabel-jurnal">Loading data...</div>
 
 <script>
-// GANTI DENGAN LINK CSV GOOGLE SHEET KAMU
-  const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTU5UVG2QyOsCVwzLF5D39El9O3l6Dq5perIlqRyhzZygfqXK6ojR5_avK4nfriuARtr9rI2xTLCdVK/pub?output=csv";
+const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTU5UVG2QyOsCVwzLF5D39El9O3l6Dq5perIlqRyhzZygfqXK6ojR5_avK4nfriuARtr9rI2xTLCdVK/pub?output=csv";
+
 fetch(SHEET_URL)
-.then(res => res.text())
-.then(csv => {
-  let rows = csv.split("\n").map(r => r.split(","));
-  let html = "<table><tr>";
-  rows[0].forEach(h => html += `<th>${h}</th>`);
-  html += "</tr>";
-  
-  for(let i=1; i<rows.length; i++){
-    html += "<tr>";
-    rows[i].forEach((cell, idx) => {
-      let cls = "";
-      if(idx == 7 && parseFloat(cell) > 0) cls = "class='profit'"; // kolom Profit
-      if(idx == 7 && parseFloat(cell) < 0) cls = "class='loss'";
-      html += `<td ${cls}>${cell}</td>`;
+  .then(res => res.text())
+  .then(csv => {
+    const baris = csv.split('\n');
+    let html = '<table border="1" style="width:100%; border-collapse:collapse; font-size:12px;">';
+    
+    baris.forEach((barisData, i) => {
+      const kolom = barisData.split(',');
+      html += '<tr>';
+      kolom.forEach((sel, idx) => {
+        if(i === 0) {
+          html += `<th style="padding:6px; background:#007bff; color:white;">${sel}</th>`;
+        } else {
+          let warna = '';
+          if(idx == 7 && parseFloat(sel) > 0) warna = 'style="color:green; font-weight:bold;"'; // Profit
+          if(idx == 7 && parseFloat(sel) < 0) warna = 'style="color:red; font-weight:bold;"'; // Loss
+          html += `<td ${warna} style="padding:6px;">${sel}</td>`;
+        }
+      });
+      html += '</tr>';
     });
-    html += "</tr>";
-  }
-  html += "</table>";
-  document.getElementById("data").innerHTML = html;
-})
-.catch(err => document.getElementById("data").innerHTML = "Error: Cek link Sheet nya");
+    
+    html += '</table>';
+    document.getElementById('tabel-jurnal').innerHTML = html;
+  })
+  .catch(err => document.getElementById('tabel-jurnal').innerHTML = 'Gagal memuat data');
 </script>
 </body>
 </html>
