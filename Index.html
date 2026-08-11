@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JE.TRADEFx Journal</title>
+<style>
+body { font-family: Arial; background: #0d1117; color: #c9d1d9; padding: 15px; }
+h1 { color: #58a6ff; text-align: center; }
+table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 12px; }
+th, td { border: 1px solid #30363d; padding: 8px; text-align: center; }
+th { background: #161b22; color: #58a6ff; }
+.profit { color: #3fb950; }
+.loss { color: #f85149; }
+</style>
+</head>
+<body>
+<h1>📊 JE.TRADEFx TRADING JOURNAL</h1>
+<p style="text-align:center;">Data otomatis dari Google Sheet</p>
+<div id="data">Loading data...</div>
+
+<script>
+// GANTI DENGAN LINK CSV GOOGLE SHEET KAMU
+const SHEET_URL = "https://docs.google.com/spreadsheets/d/ID_SHEET_KAMU/export?format=csv";
+
+fetch(SHEET_URL)
+.then(res => res.text())
+.then(csv => {
+  let rows = csv.split("\n").map(r => r.split(","));
+  let html = "<table><tr>";
+  rows[0].forEach(h => html += `<th>${h}</th>`);
+  html += "</tr>";
+  
+  for(let i=1; i<rows.length; i++){
+    html += "<tr>";
+    rows[i].forEach((cell, idx) => {
+      let cls = "";
+      if(idx == 7 && parseFloat(cell) > 0) cls = "class='profit'"; // kolom Profit
+      if(idx == 7 && parseFloat(cell) < 0) cls = "class='loss'";
+      html += `<td ${cls}>${cell}</td>`;
+    });
+    html += "</tr>";
+  }
+  html += "</table>";
+  document.getElementById("data").innerHTML = html;
+})
+.catch(err => document.getElementById("data").innerHTML = "Error: Cek link Sheet nya");
+</script>
+</body>
+</html>
